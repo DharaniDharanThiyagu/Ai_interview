@@ -12,7 +12,21 @@ const { protect } = require('./middlewares/authMiddleware');
 const app = express();
 
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+    'https://ai-interview-k5ao.onrender.com',
+    'http://localhost:3000'
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS not allowed'));
+        }
+    },
+    credentials: true
+}));
 app.use(express.json());
 
 // Connect to DB
